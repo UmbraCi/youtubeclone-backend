@@ -1,0 +1,32 @@
+{
+  // Format a file on save. A formatter must be available, the file must not be auto-saved, and editor must not be shutting down.
+  // 保存时使用VSCode 自身格式化程序格式化
+  "editor.formatOnSave": true,
+  // 保存时用eslint格式化
+  "editor.codeActionsOnSave": {
+    // Enables auto fix on save. Please note auto fix on save is only available if VS Code's files.autoSave is either off, onFocusChange or onWindowChange. It will not work with afterDelay.
+    "source.fixAll.eslint": true
+  },
+  // 设置文件默认的格式化工具为 Prettier - Code formatter
+  // 当文件存在多个 VS Code 的 formatter 插件对同一个文件类型进行格式化时，需要手动选择 prettier-vscode 即 Prettier - Code formatter 插件
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    // 关闭编辑器对 js 文件的格式化，交给 ESLint 来做格式化，否则会格式化两次
+    "editor.formatOnSave": false
+  },
+  "[vue]": {
+    // 关闭编辑器对 vue 文件的格式化，交给 ESLint 来做格式化，否则会格式化两次(prettier和eslint)
+    "editor.formatOnSave": false
+  },
+  // Eslint 插件配置，详见 https://github.com/microsoft/vscode-eslint
+  "eslint.alwaysShowStatus": true,
+  // An array of language ids which should be validated by ESLint
+  "eslint.validate": ["javascript", "javascriptreact", "html", "vue"],
+  // Vetur（若安装了此插件的话）
+  // 关闭 vetur 的格式化功能
+  "vetur.format.enable": false,
+  // 关闭 vetur 对 template 的检查，交给 eslint，详见：https://vuejs.github.io/vetur/linting-error.html#linting-for-template
+  "vetur.validation.template": false
+}

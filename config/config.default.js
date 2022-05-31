@@ -16,7 +16,9 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1653646785440_5350';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [
+    'errorHandler',
+  ];
 
   // add your user config here
   const userConfig = {
@@ -31,6 +33,12 @@ module.exports = appInfo => {
       },
       // mongoose global plugins, expected a function or an array of function and options
       plugins: [],
+    },
+  };
+
+  config.security = {
+    csrf: {
+      enable: false,
     },
   };
 
