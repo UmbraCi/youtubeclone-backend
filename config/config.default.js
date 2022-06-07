@@ -42,6 +42,11 @@ module.exports = appInfo => {
     },
   };
 
+  config.jwt = {
+    secret: '98a8a477-b779-bc59-d4a2-23d21574b0f7',
+    expiresIn: '1d',
+  };
+
   return {
     ...config,
     ...userConfig,

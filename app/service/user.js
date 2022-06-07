@@ -1,6 +1,7 @@
 'use strict';
 
 const Service = require('egg').Service;
+const jwt = require('jsonwebtoken');
 
 class UserService extends Service {
   get User() {
@@ -16,7 +17,7 @@ class UserService extends Service {
   findByEmail(email) {
     return this.User.findOne({
       email,
-    });
+    }).select('+password');
   }
 
   async createUser(data) {
@@ -24,6 +25,23 @@ class UserService extends Service {
     const user = new this.User(data);
     await user.save();
     return user;
+  }
+
+
+  createToken(data) {
+    return jwt.sign(data, this.app.config.jwt.secret, {
+      expiresIn: this.app.config.jwt.expiresIn,
+    });
+  }
+
+  verifyToken(token) {
+    return jwt.verify(token, this.app.config.jwt.secret);
+  }
+
+  updateUser(data) {
+    return this.User.findByIdAndUpdate(this.ctx.user._id, data, {
+      new: true, // 返回更新之后的数据
+    });
   }
 }
 
