@@ -135,6 +135,84 @@ class UserController extends Controller {
       },
     };
   }
+
+  async subscribe() {
+    const user = this.ctx.user;
+    const userId = user._id;
+    const channelId = this.ctx.params.userId; // 要订阅的用户id
+    // 1.用户不能订阅自己
+    if (userId.equals(channelId)) {
+      this.ctx.throw(422, '不能订阅自己');
+    }
+
+    // 2.添加订阅
+    const subscribedUser = await this.service.user.subscribe(userId, channelId);
+    // 3.发送响应
+    this.ctx.body = {
+      user: {
+        ...this.ctx.helper._.pick(subscribedUser, [ 'username', 'email', 'avatar', 'channelDescription', 'cover', 'subscribersCount' ]),
+        isSubscribed: true,
+      },
+    };
+  }
+
+  async unSubscribe() {
+    const user = this.ctx.user;
+    const userId = user._id;
+    const channelId = this.ctx.params.userId; // 要订阅的用户id
+    // 1.用户不能订阅自己
+    if (userId.equals(channelId)) {
+      this.ctx.throw(422, '不能取消订阅自己');
+    }
+
+    // 2.添加订阅
+    const subscribedUser = await this.service.user.unSubscribe(userId, channelId);
+    // 3.发送响应
+    this.ctx.body = {
+      user: {
+        ...this.ctx.helper._.pick(subscribedUser, [ 'username', 'email', 'avatar', 'channelDescription', 'cover', 'subscribersCount' ]),
+        isSubscribed: false,
+      },
+    };
+  }
+
+  async getUser() {
+    // 1.获取订阅状态
+    let isSubscribed = false;
+    if (this.ctx.user) {
+      // 获取订阅记录
+      const record = await this.app.model.Subscription.findOne({
+        user: this.ctx.user._id,
+        channel: this.ctx.params.userId,
+      });
+      if (record) {
+        isSubscribed = true;
+      }
+    }
+    // 2.获取用户信息
+    const user = await this.app.model.User.findById(this.ctx.params.userId);
+    // 3.发送响应
+    this.ctx.body = {
+      user: {
+        ...this.ctx.helper._.pick(user, [ 'username', 'email', 'avatar', 'channelDescription', 'cover', 'subscribersCount' ]),
+        isSubscribed,
+      },
+    };
+  }
+
+  async getSubscriptions() {
+    const Subscription = this.app.model.Subscription;
+    let subscriptions = await Subscription.find({
+      user: this.ctx.params.userId,
+    }).populate('channel');
+    subscriptions = subscriptions.map(item => {
+      return this.ctx.helper._.pick(item.channel, [ '_id', 'avatar', 'username' ]);
+    });
+    this.ctx.body = {
+      subscriptions,
+    };
+  }
+
 }
 
 module.exports = UserController;

@@ -33,6 +33,10 @@ module.exports = app => {
       type: String,
       default: null,
     },
+    subscribersCount: {
+      type: Number,
+      default: 0,
+    },
     // 创建时间
     createdAt: {
       type: Date,

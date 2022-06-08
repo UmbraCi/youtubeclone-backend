@@ -15,4 +15,10 @@ module.exports = app => {
   router.get('/user', auth, controller.user.getCurrentUser);
 
   router.patch('/user', auth, controller.user.update);
+  router.get('/users/:userId', app.middleware.auth({ required: false }), controller.user.getUser);
+
+  // 用户订阅相关的接口
+  router.post('/users/:userId/subscribe', auth, controller.user.subscribe);
+  router.delete('/users/:userId/subscribe', auth, controller.user.unSubscribe);
+  router.get('/users/:userId/subscriptions', controller.user.getSubscriptions);
 };
