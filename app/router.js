@@ -21,4 +21,12 @@ module.exports = app => {
   router.post('/users/:userId/subscribe', auth, controller.user.subscribe);
   router.delete('/users/:userId/subscribe', auth, controller.user.unSubscribe);
   router.get('/users/:userId/subscriptions', controller.user.getSubscriptions);
+
+  // 阿里云VOD
+  router.get('/vod/CreateUploadVideo', auth, controller.vod.CreateUploadVideo);
+  router.get('/vod/RefreshUploadVideo', auth, controller.vod.RefreshUploadVideo);
+  router.post('/videos', auth, controller.video.createVideo); // 创建视频
+  router.get('/videos/:videoId', app.middleware.auth({ required: false }), controller.video.getVideo); // 获取视频
+  router.get('/videos/', controller.video.getVideos); // 获取视频
+  router.get('/users/:userId/videos/', controller.video.getUserVideos); // 获取视频
 };
